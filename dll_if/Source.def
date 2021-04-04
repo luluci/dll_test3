@@ -1,0 +1,4 @@
+LIBRARY dll_if
+EXPORTS
+    dll_if_get @1
+	dll_if_gui @2
