@@ -23,38 +23,13 @@ namespace dll_gui
     /// </summary>
     public partial class UserControl1 : Window
     {
-        public data_container data_c = new data_container();
-
-        public UserControl1()
+        public UserControl1(VMDataContainer data_cont)
         {
             InitializeComponent();
             
-            DataContext = this.data_c;
-        }
-
-
-        public int get_slider()
-        {
-            return this.data_c.X;
+            this.DataContext = data_cont;
         }
     }
 
-
-    public class data_container : INotifyPropertyChanged
-    {
-        public int X { get; set; }
-
-        public data_container()
-        {
-            this.X = 11;
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void NotifyPropertyChanged(string PropertyName)
-        {
-            var e = new PropertyChangedEventArgs(PropertyName);
-            PropertyChanged?.Invoke(this, e);
-        }
-    }
+    
 }

@@ -80,6 +80,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <ReferencePath>D:\home\vs_workspace\DLL_test\dll_test3\Release;$(ReferencePath)</ReferencePath>
+    <IncludePath>D:\home\vs_workspace\DLL_test\dll_test3\dll_if;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -154,6 +156,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="dll_test3.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\dll_gui\dll_gui.csproj">
+      <Project>{c41d8f59-1d9b-49f0-896a-d3b5f0a35a6a}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\dll_if\dll_if.vcxproj">
+      <Project>{30335d7f-3b15-4b53-a9d2-7a0ab4f47f0a}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

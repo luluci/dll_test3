@@ -11,17 +11,16 @@ using namespace dllif;
 
 
 
-ref class WND_WRAPPER {
-public:
-	static dll_gui::UserControl1 ^wnd = gcnew dll_gui::UserControl1();
-};
-
-
-
 void __stdcall dllif::dll_if_get(dll_if_t *if_c) {
-	if_c->ad = WND_WRAPPER::wnd->data_c->X;
+	if_c->ad = dll_gui::GUI_IF::get_value();
 }
 
 void __stdcall dllif::dll_if_gui() {
-	WND_WRAPPER::wnd->ShowDialog();
+	try {
+		Console::WriteLine("GUI!");
+		dll_gui::GUI_IF::start_gui();
+	}
+	catch (Exception ^e) {
+		Console::WriteLine("exception!");
+	}
 }

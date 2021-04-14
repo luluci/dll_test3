@@ -23,18 +23,21 @@ int main()
 	auto if_get = reinterpret_cast<DLL_IF_GET>(::GetProcAddress(dll, "dll_if_get"));
 	auto if_gui = reinterpret_cast<DLL_IF_GUI>(::GetProcAddress(dll, "dll_if_gui"));
 
-	{
-		dllif::dll_if_t if_c = { 0 };
-		if_get(&if_c);
-		std::cout << if_c.ad << std::endl;
-	}
-
+	/*
 	std::thread thrd(gui_hdle, if_get);
 
 	if_gui();
 
 	thread_finish = true;
 	thrd.join();
+	*/
+	try {
+		std::cout << "call if_gui()!\n";
+		if_gui();
+	}
+	catch (...) {
+		std::cout << "exception!" << std::endl;
+	}
 
 	if (dll) ::FreeLibrary(dll);
 
