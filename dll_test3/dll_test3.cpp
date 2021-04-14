@@ -10,6 +10,7 @@
 
 typedef void(__stdcall* DLL_IF_GET)(dllif::dll_if_t*);
 typedef void(__stdcall* DLL_IF_GUI)(void);
+typedef bool(__stdcall* DLL_IF_GUI_STATE)(void);
 
 bool thread_finish = false;
 void gui_hdle(DLL_IF_GET);
@@ -21,7 +22,9 @@ int main()
 
 	auto dll = ::LoadLibrary(L"dll_if.dll");
 	auto if_get = reinterpret_cast<DLL_IF_GET>(::GetProcAddress(dll, "dll_if_get"));
-	auto if_gui = reinterpret_cast<DLL_IF_GUI>(::GetProcAddress(dll, "dll_if_gui"));
+	auto if_gui_start = reinterpret_cast<DLL_IF_GUI>(::GetProcAddress(dll, "dll_if_gui_start"));
+	auto if_gui_end = reinterpret_cast<DLL_IF_GUI>(::GetProcAddress(dll, "dll_if_gui_end"));
+	auto if_gui_is_active = reinterpret_cast<DLL_IF_GUI_STATE>(::GetProcAddress(dll, "dll_if_gui_is_active"));
 
 	/*
 	std::thread thrd(gui_hdle, if_get);
@@ -33,12 +36,30 @@ int main()
 	*/
 	try {
 		std::cout << "call if_gui()!\n";
-		if_gui();
+		if_gui_start();
+		// gui hdle
+		{
+			dllif::dll_if_t if_c = { 0 };
+			int value = -1;
+			int prev_value = -1;
+			auto sleep_time = std::chrono::seconds(1);
+
+			while (if_gui_is_active()) {
+				if_get(&if_c);
+				value = if_c.ad;
+				if (value != prev_value) {
+					std::cout << "value:" << value << std::endl;
+					prev_value = value;
+				}
+				std::this_thread::sleep_for(sleep_time);
+			}
+		}
 	}
 	catch (...) {
 		std::cout << "exception!" << std::endl;
 	}
 
+	if_gui_end();
 	if (dll) ::FreeLibrary(dll);
 
 	return 0;
@@ -54,23 +75,3 @@ int main()
 //   4. エラー一覧ウィンドウを使用してエラーを表示します
 //   5. [プロジェクト] > [新しい項目の追加] と移動して新しいコード ファイルを作成するか、[プロジェクト] > [既存の項目の追加] と移動して既存のコード ファイルをプロジェクトに追加します
 //   6. 後ほどこのプロジェクトを再び開く場合、[ファイル] > [開く] > [プロジェクト] と移動して .sln ファイルを選択します
-
-void gui_hdle(DLL_IF_GET if_get) {
-	dllif::dll_if_t if_c = { 0 };
-	int value = -1;
-	int prev_value = -1;
-	auto sleep_time = std::chrono::seconds(1);
-
-	while (!thread_finish) {
-		if_get(&if_c);
-		value = if_c.ad;
-		if (value != prev_value) {
-			std::cout << "value:" << value << std::endl;
-			prev_value = value;
-		}
-		std::this_thread::sleep_for(sleep_time);
-	}
-
-	std::cout << "Thread finish!";
-
-}

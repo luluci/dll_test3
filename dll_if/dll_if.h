@@ -27,5 +27,7 @@ namespace dllif {
 	} dll_if_t;
 
 	VC_DLL_EXPORTS void __stdcall dll_if_get(dll_if_t*);
-	VC_DLL_EXPORTS void __stdcall dll_if_gui(void);
+	VC_DLL_EXPORTS void __stdcall dll_if_gui_start(void);
+	VC_DLL_EXPORTS void __stdcall dll_if_gui_end(void);
+	VC_DLL_EXPORTS bool __stdcall dll_if_gui_is_active(void);
 }
